@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import React from 'react';
+import { ImageBackground, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function WelcomeScreen() {
   const handleContinueWithoutLogin = () => {
@@ -19,8 +19,7 @@ export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#7B1E3A" />
-      
-      {/* Header com Background de Imagem */}
+
       <ImageBackground
         source={{ uri: 'https://assets.gqindia.com/photos/684a9d18e8d73f33c3d3fb3f/16:9/w_2560%2Cc_limit/how-long-does-an-open-bottle-of-wine-last.jpg' }}
         style={styles.headerBackground}
@@ -40,19 +39,16 @@ export default function WelcomeScreen() {
         </View>
       </ImageBackground>
 
-      {/* Container Branco com Topo Arredondado */}
       <View style={styles.whiteContainer}>
         <View style={styles.contentSection}>
           
-          {/* Welcome Message */}
           <View style={styles.welcomeSection}>
             <Text style={styles.welcomeTitle}>Bem-vindo!</Text>
             <Text style={styles.welcomeSubtitle}>
               Explore e descubra a história por trás de cada garrafa
             </Text>
           </View>
-
-          {/* Action Buttons */}
+          
           <View style={styles.buttonsContainer}>
             <TouchableOpacity 
               style={styles.primaryButton} 

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, StatusBar, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -39,7 +39,6 @@ export default function LoginScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <StatusBar barStyle="light-content" backgroundColor="#7B1E3A" />
 
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton} 
@@ -51,7 +50,6 @@ export default function LoginScreen() {
         <Text style={styles.headerTitle}>Login</Text>
       </View>
 
-      {/* Logo */}
       <View style={styles.logoContainer}>
         <View style={styles.logoCircle}>
           <Ionicons name="wine" size={60} color="#ffffff" />
@@ -59,7 +57,6 @@ export default function LoginScreen() {
         <Text style={styles.logoText}>TCC Vinícola</Text>
       </View>
 
-      {/* Formulário */}
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <Ionicons name="mail" size={20} color="#7B1E3A" style={styles.inputIcon} />
@@ -117,7 +114,6 @@ export default function LoginScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>Não tem uma conta?</Text>
         <TouchableOpacity activeOpacity={0.7}>
@@ -152,7 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: '#FFFFFF',
-    marginRight: 40, // Compensar o botão de voltar
+    marginRight: 40,
   },
   logoContainer: {
     alignItems: 'center',

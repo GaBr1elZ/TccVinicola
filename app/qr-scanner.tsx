@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Alert, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function QRScannerScreen() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [flashOn, setFlashOn] = useState(false);
 
   useEffect(() => {
-    // Simular solicitação de permissão da câmera
     requestCameraPermission();
   }, []);
 
   const requestCameraPermission = async () => {
-    // Por enquanto, simular permissão concedida
-    // Em um app real, você usaria expo-camera ou expo-barcode-scanner
     setTimeout(() => {
       setHasPermission(true);
     }, 1000);
@@ -32,7 +29,6 @@ export default function QRScannerScreen() {
         {
           text: 'Ver Produto',
           onPress: () => {
-            // Aqui você navegaria para a tela do produto
             router.push('/(tabs)');
           },
         },
@@ -41,7 +37,6 @@ export default function QRScannerScreen() {
   };
 
   const simulateQRScan = () => {
-    // Simular leitura de QR code para teste
     const mockQRData = 'vinho_premium_2019_cabernet_sauvignon';
     handleBarCodeScanned({ data: mockQRData });
   };
@@ -106,7 +101,6 @@ export default function QRScannerScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Camera View Placeholder */}
       <View style={styles.cameraContainer}>
         <View style={styles.cameraPlaceholder}>
           <Ionicons name="camera" size={80} color="#7B1E3A" />
@@ -116,7 +110,6 @@ export default function QRScannerScreen() {
           </Text>
         </View>
 
-        {/* Scanning Frame */}
         <View style={styles.scanFrame}>
           <View style={[styles.corner, styles.topLeft]} />
           <View style={[styles.corner, styles.topRight]} />
@@ -125,7 +118,6 @@ export default function QRScannerScreen() {
         </View>
       </View>
 
-      {/* Instructions */}
       <View style={styles.instructionsContainer}>
         <Text style={styles.instructionsTitle}>Como usar:</Text>
         <Text style={styles.instructionsText}>
@@ -135,7 +127,6 @@ export default function QRScannerScreen() {
         </Text>
       </View>
 
-      {/* Test Button (remove in production) */}
       <View style={styles.bottomContainer}>
         <TouchableOpacity 
           style={styles.testButton} 
