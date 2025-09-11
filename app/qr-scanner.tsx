@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -52,7 +52,8 @@ export default function QRScannerScreen() {
 
   function handleQRCodeScanned(data: string) {
     console.log('QR Code scanned:', data);
-    // router.push({ pathname: '/projects/Demostration', params: { QRCode: data } });
+    const router = useRouter();
+    router.push({ pathname: '/qr-description', params: { QRCode: data } });
   }
 
   if (hasPermission === null) {

@@ -2,12 +2,13 @@ import React, { useState } from "react"
 import { StyleSheet, useWindowDimensions } from "react-native"
 
 
+import { SheetDown } from "@/components/ui/BottomSheets"
+import { CarrosselImages } from "@/components/ui/Carrossel"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 
-import { CarrosselImages } from "@/components/carrossel"
-import { SheetDown } from "@/components/ui/BottomSheets"
+
 import { useEffect } from "react"
-import { GestureHandlerRootView } from "react-native-gesture-handler"
 
 
 
@@ -40,7 +41,7 @@ export default function Demonstration() {
     var colection: any = null;
 
     console.log(response);
-    
+
 
     if (response) {
         [colection] = response.data;
@@ -52,7 +53,7 @@ export default function Demonstration() {
             <SafeAreaView style={[styles.container]}>
                 <GestureHandlerRootView>
                     {response ? <CarrosselImages images={colection.images} width={windowWidth} height={400} /> : null}
-                    <SheetDown SheetHeight={65} Percentage={true} Close={false} description={colection.descricao}></SheetDown>
+                    {response ? <SheetDown SheetHeight={65} Percentage={true} Close={false} description={colection.descricao}></SheetDown> : null}
                 </GestureHandlerRootView>
             </SafeAreaView>
         </SafeAreaProvider>
@@ -61,6 +62,6 @@ export default function Demonstration() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 0, 
+        padding: 0,
     }
 })
