@@ -4,7 +4,6 @@ import { StyleSheet, useWindowDimensions } from "react-native"
 
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 
-import { rootStyles } from "@/app/styles/styles"
 import { CarrosselImages } from "@/components/carrossel"
 import { SheetDown } from "@/components/ui/BottomSheets"
 import { useEffect } from "react"
@@ -50,7 +49,7 @@ export default function Demonstration() {
 
     return (
         <SafeAreaProvider>
-            <SafeAreaView style={[rootStyles.container, styles.container]}>
+            <SafeAreaView style={[styles.container]}>
                 <GestureHandlerRootView>
                     {response ? <CarrosselImages images={colection.images} width={windowWidth} height={400} /> : null}
                     <SheetDown SheetHeight={65} Percentage={true} Close={false} description={colection.descricao}></SheetDown>
