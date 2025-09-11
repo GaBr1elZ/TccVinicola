@@ -1,20 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+
 export default function QRScannerScreen() {
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [hasPermission, setHasPermission] = useCameraPermissions();
   const [flashOn, setFlashOn] = useState(false);
+  const qrCodeLock = useRef(false);
 
   useEffect(() => {
     requestCameraPermission();
   }, []);
 
   const requestCameraPermission = async () => {
-    setTimeout(() => {
-      setHasPermission(true);
-    }, 1000);
+    setHasPermission();
   };
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
@@ -49,6 +50,11 @@ export default function QRScannerScreen() {
     setFlashOn(!flashOn);
   };
 
+  function handleQRCodeScanned(data: string) {
+    console.log('QR Code scanned:', data);
+    // router.push({ pathname: '/projects/Demostration', params: { QRCode: data } });
+  }
+
   if (hasPermission === null) {
     return (
       <View style={styles.permissionContainer}>
@@ -59,7 +65,7 @@ export default function QRScannerScreen() {
     );
   }
 
-  if (hasPermission === false) {
+  if (hasPermission.granted === false) {
     return (
       <View style={styles.permissionContainer}>
         <StatusBar barStyle="light-content" backgroundColor="#8B4513" />
@@ -77,32 +83,38 @@ export default function QRScannerScreen() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={handleBack}
           activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Escanear QR Code</Text>
-        <TouchableOpacity 
-          style={styles.flashButton} 
+        <TouchableOpacity
+          style={styles.flashButton}
           onPress={toggleFlash}
           activeOpacity={0.7}
         >
-          <Ionicons 
-            name={flashOn ? "flash" : "flash-off"} 
-            size={24} 
-            color="#ffffff" 
+          <Ionicons
+            name={flashOn ? "flash" : "flash-off"}
+            size={24}
+            color="#ffffff"
           />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.cameraContainer}>
-        <View style={styles.cameraPlaceholder}>
+      <CameraView style={styles.cameraContainer}
+        onBarcodeScanned={({ data }) => {
+          if (data && !qrCodeLock.current) {
+            qrCodeLock.current = true
+            setTimeout(() => handleQRCodeScanned(data), 500)
+          }
+        }}>
+        {/* <View style={styles.cameraPlaceholder}>
           <Ionicons name="camera" size={80} color="#7B1E3A" />
           <Text style={styles.cameraText}>Área da Câmera</Text>
           <Text style={styles.cameraSubtext}>
@@ -115,8 +127,8 @@ export default function QRScannerScreen() {
           <View style={[styles.corner, styles.topRight]} />
           <View style={[styles.corner, styles.bottomLeft]} />
           <View style={[styles.corner, styles.bottomRight]} />
-        </View>
-      </View>
+        </View> */}
+      </CameraView>
 
       <View style={styles.instructionsContainer}>
         <Text style={styles.instructionsTitle}>Como usar:</Text>
@@ -128,8 +140,8 @@ export default function QRScannerScreen() {
       </View>
 
       <View style={styles.bottomContainer}>
-        <TouchableOpacity 
-          style={styles.testButton} 
+        <TouchableOpacity
+          style={styles.testButton}
           onPress={simulateQRScan}
           activeOpacity={0.8}
         >
