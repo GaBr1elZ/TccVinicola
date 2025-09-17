@@ -16,7 +16,6 @@ export function Carrossel({ images, width, height }: CarrosselProps) {
 
     return (
         <ScrollView
-
             horizontal={true}
             pagingEnabled
             showsHorizontalScrollIndicator={false}
@@ -83,7 +82,7 @@ export function NavigationDots({ images }: DotsProps) {
                 windowWidth * imageIndex,
                 windowWidth * (imageIndex + 1),
             ],
-            outputRange: [6, 16, 6],
+            outputRange: [8, 24, 8],
             extrapolate: 'clamp',
         });
         return (

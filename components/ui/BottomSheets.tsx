@@ -99,7 +99,7 @@ export function SheetUp(
 
     const pan = Gesture.Pan().onChange(function (event) {
         const offsetDelta = event.changeY + offset.value;
-        const clamp = Math.max(-SheetOverDrag, offsetDelta)
+        const clamp = Math.min(SheetOverDrag, Math.max(-SheetOverDrag, offsetDelta))
 
         offset.value = offsetDelta < 0 ? offsetDelta : withSpring(clamp)
 
@@ -122,7 +122,7 @@ export function SheetUp(
         <GestureDetector gesture={pan}>
             <Animated.View
                 style={[styles.container, { height: SheetHeight }, translateY]}
-                entering={SlideInDown.springify().damping(15)}
+                entering={SlideInDown.springify(100).damping(5)}
                 exiting={SlideOutDown}>
 
                 <MaterialCommunityIcons name="minus"
@@ -139,7 +139,7 @@ export function SheetUp(
 const DIMENSIONS = Dimensions.get('window');
 
 export const styles = StyleSheet.create({
-    container:{
+    container: {
         width: DIMENSIONS.width,
         backgroundColor: '#f8f8f8ff',
         position: 'absolute',

@@ -1,11 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function QRScannerScreen() {
+  const router = useRouter();
   const [hasPermission, setHasPermission] = useCameraPermissions();
   const [flashOn, setFlashOn] = useState(false);
   const qrCodeLock = useRef(false);
@@ -52,7 +54,6 @@ export default function QRScannerScreen() {
 
   function handleQRCodeScanned(data: string) {
     console.log('QR Code scanned:', data);
-    const router = useRouter();
     router.push({ pathname: '/qr-description', params: { QRCode: data } });
   }
 
@@ -86,27 +87,29 @@ export default function QRScannerScreen() {
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={handleBack}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Escanear QR Code</Text>
-        <TouchableOpacity
-          style={styles.flashButton}
-          onPress={toggleFlash}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={flashOn ? "flash" : "flash-off"}
-            size={24}
-            color="#ffffff"
-          />
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView edges={['top', 'left', 'right']} style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={handleBack}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Escanear QR Code</Text>
+          <TouchableOpacity
+            style={styles.flashButton}
+            onPress={toggleFlash}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={flashOn ? "flash" : "flash-off"}
+              size={24}
+              color="#ffffff"
+            />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
 
       <CameraView style={styles.cameraContainer}
         onBarcodeScanned={({ data }) => {
@@ -140,7 +143,7 @@ export default function QRScannerScreen() {
         </Text>
       </View>
 
-      <View style={styles.bottomContainer}>
+      <SafeAreaView style={styles.bottomContainer}>
         <TouchableOpacity
           style={styles.testButton}
           onPress={simulateQRScan}
@@ -148,7 +151,7 @@ export default function QRScannerScreen() {
         >
           <Text style={styles.testButtonText}>Continuar Escaneamento</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </View>
   );
 }
@@ -176,10 +179,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 50,
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingVertical: 20,
+  },
+  headerContainer: {
     backgroundColor: 'rgba(123, 30, 58, 0.9)',
+    justifyContent: "flex-end",
+    height: "auto",
   },
   backButton: {
     padding: 8,
@@ -252,7 +258,7 @@ const styles = StyleSheet.create({
   instructionsContainer: {
     backgroundColor: 'rgba(123, 30, 58, 0.9)',
     paddingHorizontal: 30,
-    paddingVertical: 20,
+    paddingTop: 20,
   },
   instructionsTitle: {
     color: '#FFFFFF',
@@ -267,7 +273,6 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     paddingHorizontal: 30,
-    paddingVertical: 30,
     backgroundColor: 'rgba(123, 30, 58, 0.9)',
   },
   button: {
