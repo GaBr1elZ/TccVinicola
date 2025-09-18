@@ -35,7 +35,7 @@ export default function WelcomeScreen() {
               style={styles.wineGlassIcon}
             />
           </View>
-          <Text style={styles.brandName}>TCC Vinícola</Text>
+          <Text style={styles.brandName}>Vinícola</Text>
         </View>
       </ImageBackground>
 
