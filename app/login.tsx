@@ -54,7 +54,7 @@ export default function LoginScreen() {
         <View style={styles.logoCircle}>
           <Ionicons name="wine" size={60} color="#ffffff" />
         </View>
-        <Text style={styles.logoText}>TCC Vinícola</Text>
+        <Text style={styles.logoText}>Vinícola</Text>
       </View>
 
       <View style={styles.formContainer}>
