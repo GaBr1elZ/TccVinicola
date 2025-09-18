@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 
@@ -10,38 +10,18 @@ export default function QRScannerScreen() {
   const router = useRouter();
   const [hasPermission, setHasPermission] = useCameraPermissions();
   const [flashOn, setFlashOn] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
   const qrCodeLock = useRef(false);
 
   useEffect(() => {
-    requestCameraPermission();
-  }, []);
-
-  const requestCameraPermission = async () => {
-    setHasPermission();
-  };
-
-  const handleBarCodeScanned = ({ data }: { data: string }) => {
-    Alert.alert(
-      'QR Code Detectado!',
-      `Dados: ${data}`,
-      [
-        {
-          text: 'Escanear Novamente',
-          onPress: () => console.log('Continuar escaneando'),
-        },
-        {
-          text: 'Ver Produto',
-          onPress: () => {
-            router.push('/(tabs)');
-          },
-        },
-      ]
-    );
-  };
+    const requestPermission = async () => {
+      setHasPermission();
+    };
+    requestPermission();
+  }, [setHasPermission]);
 
   const simulateQRScan = () => {
-    const mockQRData = 'vinho_premium_2019_cabernet_sauvignon';
-    handleBarCodeScanned({ data: mockQRData });
+    setShowInstructions(false);
   };
 
   const handleBack = () => {
@@ -111,47 +91,47 @@ export default function QRScannerScreen() {
         </View>
       </SafeAreaView>
 
-      <CameraView style={styles.cameraContainer}
+      <CameraView 
+        style={styles.cameraContainer}
+        enableTorch={flashOn}
         onBarcodeScanned={({ data }) => {
           if (data && !qrCodeLock.current) {
             qrCodeLock.current = true
             setTimeout(() => handleQRCodeScanned(data), 500)
           }
         }}>
-        {/* <View style={styles.cameraPlaceholder}>
-          <Ionicons name="camera" size={80} color="#7B1E3A" />
-          <Text style={styles.cameraText}>Área da Câmera</Text>
-          <Text style={styles.cameraSubtext}>
-            Posicione o QR code dentro do quadrado
-          </Text>
-        </View>
-
-        <View style={styles.scanFrame}>
-          <View style={[styles.corner, styles.topLeft]} />
-          <View style={[styles.corner, styles.topRight]} />
-          <View style={[styles.corner, styles.bottomLeft]} />
-          <View style={[styles.corner, styles.bottomRight]} />
-        </View> */}
+        {!showInstructions && (
+          <View style={styles.scanFrame}>
+            <View style={[styles.corner, styles.topLeft]} />
+            <View style={[styles.corner, styles.topRight]} />
+            <View style={[styles.corner, styles.bottomLeft]} />
+            <View style={[styles.corner, styles.bottomRight]} />
+          </View>
+        )}
       </CameraView>
 
-      <View style={styles.instructionsContainer}>
-        <Text style={styles.instructionsTitle}>Como usar:</Text>
-        <Text style={styles.instructionsText}>
-          • Aponte a câmera para o QR{'\n'}
-          • Mantenha o código dentro da área marcada{'\n'}
-          • O escaneamento é automático
-        </Text>
-      </View>
+      {showInstructions && (
+        <View style={styles.instructionsContainer}>
+          <Text style={styles.instructionsTitle}>Como usar:</Text>
+          <Text style={styles.instructionsText}>
+            • Aponte a câmera para o QR{'\n'}
+            • Mantenha o código dentro da área marcada{'\n'}
+            • O escaneamento é automático
+          </Text>
+        </View>
+      )}
 
-      <SafeAreaView style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.testButton}
-          onPress={simulateQRScan}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.testButtonText}>Continuar Escaneamento</Text>
-        </TouchableOpacity>
-      </SafeAreaView>
+      {showInstructions && (
+        <SafeAreaView style={styles.bottomContainer}>
+          <TouchableOpacity
+            style={styles.testButton}
+            onPress={simulateQRScan}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.testButtonText}>Continuar Escaneamento</Text>
+          </TouchableOpacity>
+        </SafeAreaView>
+      )}
     </View>
   );
 }
