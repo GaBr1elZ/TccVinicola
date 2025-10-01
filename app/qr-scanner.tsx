@@ -33,7 +33,6 @@ export default function QRScannerScreen() {
   };
 
   function handleQRCodeScanned(data: string) {
-    console.log('QR Code scanned:', data);
     router.push({ pathname: '/qr-description', params: { QRCode: data } });
   }
 
