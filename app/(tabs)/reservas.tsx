@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { 
+import {
   Alert,
+  Platform,
   ScrollView,
-  StyleSheet, 
-  Text, 
+  StyleSheet,
+  Text,
   TextInput,
-  TouchableOpacity, 
+  TouchableOpacity,
   View
 } from 'react-native';
 
@@ -365,7 +366,10 @@ const estilos = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 30,
+    paddingBottom: Platform.select({
+      ios: 120, 
+      android: 96, 
+    }),
   },
   formulario: {
     padding: 20,

@@ -1,12 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { 
+import {
   FlatList,
-  ImageBackground, 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity, 
-  View 
+  ImageBackground,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 interface Wine {
@@ -171,6 +172,10 @@ const styles = StyleSheet.create({
   },
   conteudoLista: {
     padding: 20,
+    paddingBottom: Platform.select({
+      ios: 120,
+      android: 96,
+    }),
   },
   cartaoVinho: {
     backgroundColor: '#fff',

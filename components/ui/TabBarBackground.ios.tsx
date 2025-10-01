@@ -5,14 +5,19 @@ import { StyleSheet } from 'react-native';
 export default function BlurTabBarBackground() {
   return (
     <BlurView
-      // System chrome material automatically adapts to the system's theme
-      // and matches the native tab bar appearance on iOS.
-      tint="systemChromeMaterial"
-      intensity={100}
-      style={StyleSheet.absoluteFill}
+      tint="light"
+      intensity={95}
+      style={[StyleSheet.absoluteFill, styles.blur]}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  blur: {
+    borderRadius: 25,
+    overflow: 'hidden',
+  },
+});
 
 export function useBottomTabOverflow() {
   return useBottomTabBarHeight();
