@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "TestesTccVinicolaMobile",
-    "slug": "TestesTccVinicolaMobile",
+    "name": "Vinícola App",
+    "slug": "vinicolaapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/iconApp.jpg",
-    "scheme": "testestccvinicolamobile",
+    "scheme": "vinicolaapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
