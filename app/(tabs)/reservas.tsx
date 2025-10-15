@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Alert,
   Platform,
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import apiService from '../../services/apiService';
 
 interface DadosReserva {
   nomeCliente: string;
@@ -43,8 +44,39 @@ export default function ReservasScreen() {
     tipoTour: '',
     observacoes: ''
   });
+  const [userId, setUserId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      setUserId(1);
+    } catch (error) {
+      console.error('Erro ao carregar dados do usuário:', error);
+    }
+  };
 
   const atualizarCampo = (campo: keyof DadosReserva, valor: string) => {
+    if (campo === 'dataVisita') {
+      let apenasNumeros = valor.replace(/\D/g, '');
+      apenasNumeros = apenasNumeros.substring(0, 8);
+      
+      let dataFormatada = apenasNumeros;
+      if (apenasNumeros.length > 2) {
+        dataFormatada = apenasNumeros.substring(0, 2) + '/' + apenasNumeros.substring(2);
+      }
+      if (apenasNumeros.length > 4) {
+        dataFormatada = apenasNumeros.substring(0, 2) + '/' + 
+                        apenasNumeros.substring(2, 4) + '/' + 
+                        apenasNumeros.substring(4);
+      }
+      
+      valor = dataFormatada;
+    }
+    
     setDadosReserva(prevState => ({
       ...prevState,
       [campo]: valor
@@ -68,6 +100,34 @@ export default function ReservasScreen() {
       Alert.alert('Erro', 'Por favor, selecione a data da visita.');
       return false;
     }
+    
+    const dataRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    const dataMatch = dadosReserva.dataVisita.match(dataRegex);
+    
+    if (!dataMatch) {
+      Alert.alert('Erro', 'Data inválida. Use o formato DD/MM/AAAA (ex: 23/10/2025).');
+      return false;
+    }
+    
+    const [, dia, mes, ano] = dataMatch;
+    const diaNum = parseInt(dia);
+    const mesNum = parseInt(mes);
+    const anoNum = parseInt(ano);
+    
+    if (diaNum < 1 || diaNum > 31 || mesNum < 1 || mesNum > 12 || anoNum < 2025) {
+      Alert.alert('Erro', 'Data inválida. Verifique o dia, mês e ano.');
+      return false;
+    }
+    
+    const dataVisita = new Date(anoNum, mesNum - 1, diaNum);
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    
+    if (dataVisita < hoje) {
+      Alert.alert('Erro', 'A data da visita não pode estar no passado.');
+      return false;
+    }
+    
     if (!dadosReserva.horarioVisita.trim()) {
       Alert.alert('Erro', 'Por favor, selecione o horário da visita.');
       return false;
@@ -79,32 +139,85 @@ export default function ReservasScreen() {
     return true;
   };
 
-  const enviarReserva = () => {
+  const enviarReserva = async () => {
     if (!validarFormulario()) {
       return;
     }
-    Alert.alert(
-      'Sucesso!', 
-      `Reserva enviada com sucesso!\n\nCliente: ${dadosReserva.nomeCliente}\nData: ${dadosReserva.dataVisita}\nHorário: ${dadosReserva.horarioVisita}\nTour: ${tiposTours.find(t => t.id === dadosReserva.tipoTour)?.nome}`,
-      [
-        {
-          text: 'OK',
-          onPress: () => {
 
-            setDadosReserva({
-              nomeCliente: '',
-              emailCliente: '',
-              telefoneCliente: '',
-              dataVisita: '',
-              horarioVisita: '',
-              numeroVisitantes: '1',
-              tipoTour: '',
-              observacoes: ''
-            });
-          }
+    if (!userId) {
+      Alert.alert('Erro', 'Você precisa estar logado para fazer uma reserva.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      let dataFormatada = dadosReserva.dataVisita;
+      
+      if (dadosReserva.dataVisita.includes('/')) {
+        const dataParts = dadosReserva.dataVisita.split('/');
+        if (dataParts.length === 3) {
+          const dia = dataParts[0].padStart(2, '0');
+          const mes = dataParts[1].padStart(2, '0');
+          const ano = dataParts[2];
+          dataFormatada = `${ano}-${mes}-${dia}`;
         }
-      ]
-    );
+      }
+      else if (dadosReserva.dataVisita.length === 8 && !isNaN(Number(dadosReserva.dataVisita))) {
+        const dia = dadosReserva.dataVisita.substring(0, 2);
+        const mes = dadosReserva.dataVisita.substring(2, 4);
+        const ano = dadosReserva.dataVisita.substring(4, 8);
+        dataFormatada = `${ano}-${mes}-${dia}`;
+      }
+
+      console.log('Data original:', dadosReserva.dataVisita);
+      console.log('Data formatada:', dataFormatada);
+
+      const reservaData = {
+        usuario_id: userId,
+        nome_cliente: dadosReserva.nomeCliente.trim(),
+        email_cliente: dadosReserva.emailCliente.trim(),
+        telefone_cliente: dadosReserva.telefoneCliente.trim(),
+        data_visita: dataFormatada,
+        horario_visita: dadosReserva.horarioVisita,
+        numero_visitantes: parseInt(dadosReserva.numeroVisitantes) || 1,
+        tipo_tour: dadosReserva.tipoTour,
+        observacoes: dadosReserva.observacoes.trim() || undefined
+      };
+
+      const response = await apiService.createReservation(reservaData);
+
+      if (response.status === 'success') {
+        Alert.alert(
+          'Sucesso!', 
+          `Reserva criada com sucesso!\n\nCliente: ${dadosReserva.nomeCliente}\nData: ${dadosReserva.dataVisita}\nHorário: ${dadosReserva.horarioVisita}\nTour: ${tiposTours.find(t => t.id === dadosReserva.tipoTour)?.nome}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setDadosReserva({
+                  nomeCliente: '',
+                  emailCliente: '',
+                  telefoneCliente: '',
+                  dataVisita: '',
+                  horarioVisita: '',
+                  numeroVisitantes: '1',
+                  tipoTour: '',
+                  observacoes: ''
+                });
+              }
+            }
+          ]
+        );
+      } else {
+        Alert.alert('Erro', response.message || 'Erro ao criar reserva');
+      }
+    } catch (error: any) {
+      console.error('Erro ao enviar reserva:', error);
+      Alert.alert('Erro', error.message || 'Erro ao enviar reserva. Verifique sua conexão.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -196,6 +309,8 @@ export default function ReservasScreen() {
                   onChangeText={(texto) => atualizarCampo('dataVisita', texto)}
                   placeholder="dd/mm/aaaa"
                   placeholderTextColor="#999"
+                  keyboardType="numeric"
+                  maxLength={10}
                 />
               </View>
             </View>
@@ -309,10 +424,16 @@ export default function ReservasScreen() {
           </View>
 
           {/* Botão de Envio */}
-          <TouchableOpacity style={estilos.botaoContainer} onPress={enviarReserva}>
-            <View style={estilos.botaoGradiente}>
+          <TouchableOpacity 
+            style={estilos.botaoContainer} 
+            onPress={enviarReserva}
+            disabled={isLoading}
+          >
+            <View style={[estilos.botaoGradiente, isLoading && estilos.botaoDesabilitado]}>
               <Ionicons name="send" size={24} color="white" />
-              <Text style={estilos.textoBotaoModerno}>Enviar Reserva</Text>
+              <Text style={estilos.textoBotaoModerno}>
+                {isLoading ? 'Enviando...' : 'Enviar Reserva'}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -413,6 +534,13 @@ const estilos = StyleSheet.create({
     color: '#333',
     marginBottom: 8,
     marginLeft: 5,
+  },
+  dicaCampo: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    marginLeft: 5,
+    fontStyle: 'italic',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -545,6 +673,10 @@ const estilos = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 30,
     backgroundColor: '#7B1E3A',
+  },
+  botaoDesabilitado: {
+    backgroundColor: '#999',
+    opacity: 0.6,
   },
   textoBotaoModerno: {
     color: 'white',

@@ -41,7 +41,6 @@ export default function HomeScreen() {
         </View>
       </ImageBackground>
 
-      {/* Conteúdo principal */}
       <View style={styles.containerConteudo}>
         <View style={styles.containerAcoes}>
           <TouchableOpacity style={styles.cartaoAcao} onPress={handleScanQR}>
@@ -65,7 +64,6 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Seção de destaque */}
         <View style={styles.secaoDestaque}>
           <Text style={styles.tituloSecao}>Em Destaque</Text>
           
@@ -87,7 +85,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Seção sobre a vinícola */}
         <View style={styles.secaoSobre}>
           <Text style={styles.tituloSecao}>Sobre Nossa Vinícola</Text>
           <Text style={styles.textoSobre}>
