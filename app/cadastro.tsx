@@ -2,55 +2,67 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage'; // INSTALE: npx expo install @react-native-async-storage/async-storage
 import apiService from '../services/apiService';
 
-export default function LoginScreen() {
+export default function CadastroScreen() {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+  const handleRegister = async () => {
+    if (!nome.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('Erro', 'As senhas não coincidem');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Erro', 'A senha deve ter no mínimo 6 caracteres');
       return;
     }
 
     setIsLoading(true);
     
     try {
-      const response = await apiService.login(email.trim(), password);
+      const response = await apiService.register(
+        nome.trim(), 
+        email.trim(), 
+        password, 
+        telefone.trim() || undefined
+      );
       
-      if (response.status === 'success' && response.data) {
-        // Salva os dados do usuário no AsyncStorage
-        // IMPORTANTE: Instale antes: npx expo install @react-native-async-storage/async-storage
-        // await AsyncStorage.setItem('user', JSON.stringify(response.data));
-        // await AsyncStorage.setItem('userId', response.data.id.toString());
-        
-        console.log('Login bem-sucedido:', response.data);
-        Alert.alert('Sucesso!', 'Login realizado com sucesso!');
-        router.replace('/(tabs)');
+      if (response.status === 'success') {
+        Alert.alert(
+          'Sucesso!', 
+          'Cadastro realizado com sucesso! Faça login para continuar.',
+          [
+            {
+              text: 'OK',
+              onPress: () => router.replace('/login')
+            }
+          ]
+        );
       } else {
-        Alert.alert('Erro', 'Email ou senha incorretos');
+        Alert.alert('Erro', response.message || 'Erro ao cadastrar usuário');
       }
     } catch (error: any) {
-      console.error('Erro no login:', error);
-      Alert.alert('Erro', error.message || 'Erro ao realizar login. Verifique sua conexão.');
+      console.error('Erro no cadastro:', error);
+      Alert.alert('Erro', error.message || 'Erro ao cadastrar. Verifique sua conexão.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleForgotPassword = () => {
-    Alert.alert(
-      'Recuperar Senha', 
-      'Um link de recuperação será enviado para seu e-mail.',
-      [{ text: 'OK' }]
-    );
-  };
-
-  const handleBackToWelcome = () => {
+  const handleBackToLogin = () => {
     router.back();
   };
 
@@ -61,22 +73,35 @@ export default function LoginScreen() {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={handleBackToWelcome}
+          onPress={handleBackToLogin}
           activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Login</Text>
+        <Text style={styles.headerTitle}>Criar Conta</Text>
       </View>
 
       <View style={styles.logoContainer}>
         <View style={styles.logoCircle}>
-          <Ionicons name="wine" size={60} color="#ffffff" />
+          <Ionicons name="person-add" size={60} color="#ffffff" />
         </View>
-        <Text style={styles.logoText}>Vinícola</Text>
+        <Text style={styles.logoText}>Cadastro</Text>
+        <Text style={styles.logoSubtext}>Crie sua conta e aproveite</Text>
       </View>
 
       <View style={styles.formContainer}>
+        <View style={styles.inputContainer}>
+          <Ionicons name="person" size={20} color="#7B1E3A" style={styles.inputIcon} />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Nome completo"
+            placeholderTextColor="#4A4A4A"
+            value={nome}
+            onChangeText={setNome}
+            autoCapitalize="words"
+          />
+        </View>
+
         <View style={styles.inputContainer}>
           <Ionicons name="mail" size={20} color="#7B1E3A" style={styles.inputIcon} />
           <TextInput
@@ -88,6 +113,18 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="call" size={20} color="#7B1E3A" style={styles.inputIcon} />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Telefone (opcional)"
+            placeholderTextColor="#4A4A4A"
+            value={telefone}
+            onChangeText={setTelefone}
+            keyboardType="phone-pad"
           />
         </View>
 
@@ -115,31 +152,50 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
-        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <Ionicons name="lock-closed" size={20} color="#7B1E3A" style={styles.inputIcon} />
+          <TextInput
+            style={[styles.textInput, styles.passwordInput]}
+            placeholder="Confirmar senha"
+            placeholderTextColor="#4A4A4A"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry={!showConfirmPassword}
+            autoCapitalize="none"
+          />
+          <TouchableOpacity 
+            onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+            style={styles.eyeButton}
+            activeOpacity={0.7}
+          >
+            <Ionicons 
+              name={showConfirmPassword ? "eye-off" : "eye"} 
+              size={20} 
+              color="#7B1E3A" 
+            />
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.passwordHint}>A senha deve ter no mínimo 6 caracteres</Text>
 
         <TouchableOpacity 
-          style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
-          onPress={handleLogin}
+          style={[styles.registerButton, isLoading && styles.registerButtonDisabled]} 
+          onPress={handleRegister}
           disabled={isLoading}
           activeOpacity={0.8}
         >
           {isLoading ? (
-            <Text style={styles.loginButtonText}>Entrando...</Text>
+            <Text style={styles.registerButtonText}>Cadastrando...</Text>
           ) : (
-            <Text style={styles.loginButtonText}>Entrar</Text>
+            <Text style={styles.registerButtonText}>Cadastrar</Text>
           )}
         </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Não tem uma conta?</Text>
-        <TouchableOpacity 
-          onPress={() => router.push('/cadastro')} 
-          activeOpacity={0.7}
-        >
-          <Text style={styles.signUpText}>Cadastre-se</Text>
+        <Text style={styles.footerText}>Já tem uma conta?</Text>
+        <TouchableOpacity onPress={handleBackToLogin} activeOpacity={0.7}>
+          <Text style={styles.signInText}>Faça Login</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -174,7 +230,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: 30,
   },
   logoCircle: {
     backgroundColor: 'rgba(212, 175, 55, 0.2)',
@@ -186,6 +242,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FFFFFF',
+  },
+  logoSubtext: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 0.8,
+    marginTop: 5,
   },
   formContainer: {
     flex: 1,
@@ -201,7 +263,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 12,
-    marginBottom: 20,
+    marginBottom: 15,
     backgroundColor: '#f9f9f9',
   },
   inputIcon: {
@@ -223,15 +285,13 @@ const styles = StyleSheet.create({
     right: 15,
     padding: 5,
   },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: 30,
+  passwordHint: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 20,
+    marginTop: -10,
   },
-  forgotPasswordText: {
-    color: '#7B1E3A',
-    fontSize: 14,
-  },
-  loginButton: {
+  registerButton: {
     backgroundColor: '#7B1E3A',
     paddingVertical: 16,
     borderRadius: 12,
@@ -242,10 +302,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
   },
-  loginButtonDisabled: {
+  registerButtonDisabled: {
     backgroundColor: '#4A4A4A',
   },
-  loginButtonText: {
+  registerButtonText: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '600',
@@ -262,7 +322,7 @@ const styles = StyleSheet.create({
     color: '#4A4A4A',
     fontSize: 14,
   },
-  signUpText: {
+  signInText: {
     color: '#7B1E3A',
     fontSize: 14,
     fontWeight: '600',

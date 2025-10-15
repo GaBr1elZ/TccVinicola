@@ -12,7 +12,8 @@ type SheetProps = {
     Close?: boolean;
     description: string;
     SetPosY?: number;
-    Expand?: boolean
+    Expand?: boolean;
+    floatingButton?: React.ReactNode;
 }
 
 export function SheetDown(
@@ -87,7 +88,8 @@ export function SheetUp(
         SheetOverDrag = 10,
         onClose = () => { },
         Expand = true,
-        description
+        description,
+        floatingButton
 
     }: SheetProps
 ) {
@@ -119,20 +121,27 @@ export function SheetUp(
     }))
 
     return (
-        <GestureDetector gesture={pan}>
-            <Animated.View
-                style={[styles.container, { height: SheetHeight }, translateY]}
-                entering={SlideInDown.springify(100).damping(5)}
-                exiting={SlideOutDown}>
+        <>
+            {floatingButton && (
+                <Animated.View style={[styles.floatingButtonContainer, translateY]}>
+                    {floatingButton}
+                </Animated.View>
+            )}
+            <GestureDetector gesture={pan}>
+                <Animated.View
+                    style={[styles.container, { height: SheetHeight }, translateY]}
+                    entering={SlideInDown.springify(100).damping(5)}
+                    exiting={SlideOutDown}>
 
-                <MaterialCommunityIcons name="minus"
-                    size={24}
-                    color="#000"
-                    style={styles.dragIcon} />
+                    <MaterialCommunityIcons name="minus"
+                        size={24}
+                        color="#000"
+                        style={styles.dragIcon} />
 
-                <Text style={styles.textDescription}>{description}</Text>
-            </Animated.View>
-        </GestureDetector>
+                    <Text style={styles.textDescription}>{description}</Text>
+                </Animated.View>
+            </GestureDetector>
+        </>
     );
 }
 
@@ -158,5 +167,11 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         color: '#333',
         // alignSelf: 'center',
+    },
+    floatingButtonContainer: {
+        position: 'absolute',
+        top: -80, // Posiciona o botão 80px acima do topo do sheet
+        right: 20,
+        zIndex: 1001,
     }
 });
