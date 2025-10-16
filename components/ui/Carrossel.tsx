@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 var scrollX = useAnimatedValue(0)
-const { width: windowWidth } = useWindowDimensions();
+const { width: windowWidth, height: windowHeight} = useWindowDimensions();
 
 export function Carrossel({ images, width, height }: CarrosselProps) {
 
@@ -42,8 +42,11 @@ export function Carrossel({ images, width, height }: CarrosselProps) {
     )
 }
 
-export function CarrosselImages({ images, width, height }: CarrosselImagesProps) {
-
+export function CarrosselImages({ images, width, height, heightPercentage = false }: CarrosselImagesProps) {
+    if (heightPercentage){
+        height = windowHeight * (height / 100);
+        console.log('New Height:',height);
+    }
     return (
         <ScrollView
             style={{ width: width, height: height }}
@@ -111,7 +114,7 @@ export const styles = StyleSheet.create({
         height: 8,
         width: 8,
         borderRadius: 4,
-        backgroundColor: 'silver',
+        backgroundColor: '#e4e4e4ff',
         marginHorizontal: 4,
     },
     indicatorContainer: {
@@ -142,4 +145,5 @@ type CarrosselImagesProps = {
     images: any[];
     width: number;
     height: number;
+    heightPercentage?: boolean;
 }
