@@ -46,6 +46,9 @@
         "projectId": "8b3428a0-9e45-4557-9d6f-6e44a41e867a"
       },
       "apiUrl": "https://backend-tcc-production-9d24.up.railway.app"
+    },
+    "androidNavigationBar": {
+      "visible": "immersive"
     }
   }
 }
