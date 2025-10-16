@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,6 +12,14 @@ export default function QRScannerScreen() {
   const [flashOn, setFlashOn] = useState(false);
   const [showInstructions, setShowInstructions] = useState(true);
   const qrCodeLock = useRef(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      qrCodeLock.current = false;
+      setShowInstructions(true); // Opcional: reseta instruções
+      return () => { };
+    }, [])
+  );
 
   useEffect(() => {
     const requestPermission = async () => {
