@@ -22,7 +22,6 @@ export default function Demonstration() {
 
     if (response?.status === 'success' && response.data) {
         [colection] = response.data;
-        console.log(colection);
     }
 
     const handleTryAgain = () => {
