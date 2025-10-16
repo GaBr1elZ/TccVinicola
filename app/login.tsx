@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage'; // INSTALE: npx expo install @react-native-async-storage/async-storage
+import { SafeAreaView } from 'react-native-safe-area-context';
 import apiService from '../services/apiService';
 
 export default function LoginScreen() {
@@ -18,16 +19,16 @@ export default function LoginScreen() {
     }
 
     setIsLoading(true);
-    
+
     try {
       const response = await apiService.login(email.trim(), password);
-      
+
       if (response.status === 'success' && response.data) {
         // Salva os dados do usuário no AsyncStorage
         // IMPORTANTE: Instale antes: npx expo install @react-native-async-storage/async-storage
         // await AsyncStorage.setItem('user', JSON.stringify(response.data));
         // await AsyncStorage.setItem('userId', response.data.id.toString());
-        
+
         console.log('Login bem-sucedido:', response.data);
         Alert.alert('Sucesso!', 'Login realizado com sucesso!');
         router.replace('/(tabs)');
@@ -44,7 +45,7 @@ export default function LoginScreen() {
 
   const handleForgotPassword = () => {
     Alert.alert(
-      'Recuperar Senha', 
+      'Recuperar Senha',
       'Um link de recuperação será enviado para seu e-mail.',
       [{ text: 'OK' }]
     );
@@ -59,8 +60,8 @@ export default function LoginScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#7B1E3A" />
 
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={handleBackToWelcome}
           activeOpacity={0.7}
         >
@@ -102,15 +103,15 @@ export default function LoginScreen() {
             secureTextEntry={!showPassword}
             autoCapitalize="none"
           />
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeButton}
             activeOpacity={0.7}
           >
-            <Ionicons 
-              name={showPassword ? "eye-off" : "eye"} 
-              size={20} 
-              color="#7B1E3A" 
+            <Ionicons
+              name={showPassword ? "eye-off" : "eye"}
+              size={20}
+              color="#7B1E3A"
             />
           </TouchableOpacity>
         </View>
@@ -119,8 +120,8 @@ export default function LoginScreen() {
           <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={[styles.loginButton, isLoading && styles.loginButtonDisabled]} 
+        <TouchableOpacity
+          style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
           onPress={handleLogin}
           disabled={isLoading}
           activeOpacity={0.8}
@@ -133,15 +134,15 @@ export default function LoginScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Não tem uma conta?</Text>
-        <TouchableOpacity 
-          onPress={() => router.push('/cadastro')} 
-          activeOpacity={0.7}
-        >
-          <Text style={styles.signUpText}>Cadastre-se</Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={styles.footer}>
+          <Text style={styles.footerText}>Não tem uma conta?</Text>
+          <TouchableOpacity
+            onPress={() => router.push('/cadastro')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.signUpText}>Cadastre-se</Text>
+          </TouchableOpacity>
+      </SafeAreaView>
     </ScrollView>
   );
 }
