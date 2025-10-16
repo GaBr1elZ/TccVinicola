@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { Dimensions, StyleSheet, Text } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { runOnJS, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
@@ -103,7 +103,11 @@ export function SheetUp(
         const offsetDelta = event.changeY + offset.value;
         const clamp = Math.min(SheetOverDrag, Math.max(-SheetOverDrag, offsetDelta))
 
-        offset.value = offsetDelta < 0 ? offsetDelta : withSpring(clamp)
+        if (offsetDelta < -SetPosY + 100) {
+            offset.value = offsetDelta > -SetPosY + 100 ? offsetDelta : withSpring(-SetPosY + 100 + clamp);
+        } else {
+            offset.value = offsetDelta < 0 ? offsetDelta : withSpring(clamp)
+        }
 
     })
         .onFinalize(function (event) {
@@ -132,12 +136,7 @@ export function SheetUp(
                     style={[styles.container, { height: SheetHeight }, translateY]}
                     entering={SlideInDown.springify(100).damping(5)}
                     exiting={SlideOutDown}>
-
-                    <MaterialCommunityIcons name="minus"
-                        size={24}
-                        color="#000"
-                        style={styles.dragIcon} />
-
+                    <View style={styles.dragIcon}/>
                     <Text style={styles.textDescription}>{description}</Text>
                 </Animated.View>
             </GestureDetector>
@@ -155,11 +154,19 @@ export const styles = StyleSheet.create({
         top: 0,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 10, height: 3 },
+        shadowOpacity: 0.5,
         // alignItems: 'center',
     },
     dragIcon: {
         alignSelf: 'center',
-        marginTop: 8,
+        marginTop: 16,
+        marginBottom: 16,
+        width: 124,
+        height: 4,
+        borderRadius: 4,
+        backgroundColor: '#D4AF37',
     },
     textDescription: {
         marginBlock: 16,
