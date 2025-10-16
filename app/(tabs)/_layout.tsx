@@ -6,7 +6,13 @@ import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 
+import Animated, { useSharedValue } from 'react-native-reanimated';
+
+const AnimatedIconSymbol = Animated.createAnimatedComponent(IconSymbol);
+
 export default function TabLayout() {
+  var iconSize = useSharedValue(28)
+
   return (
     <Tabs
       screenOptions={{
@@ -62,10 +68,10 @@ export default function TabLayout() {
         options={{
           title: 'Início',
           tabBarIcon: ({ color, focused }) => (
-            <IconSymbol 
-              size={focused ? 30 : 28} 
-              name="house.fill" 
-              color={focused ? '#7B1E3A' : color} 
+            <AnimatedIconSymbol
+              size={focused ? 30 : iconSize.value}
+              name="house.fill"
+              color={focused ? '#7B1E3A' : color}
             />
           ),
         }}
@@ -75,10 +81,10 @@ export default function TabLayout() {
         options={{
           title: 'Catálogo',
           tabBarIcon: ({ color, focused }) => (
-            <IconSymbol 
-              size={focused ? 30 : 28} 
-              name="wineglass" 
-              color={focused ? '#7B1E3A' : color} 
+            <AnimatedIconSymbol
+              size={focused ? 30 : iconSize.value}
+              name="wineglass"
+              color={focused ? '#7B1E3A' : color}
             />
           ),
         }}
@@ -88,10 +94,10 @@ export default function TabLayout() {
         options={{
           title: 'QR Code',
           tabBarIcon: ({ color, focused }) => (
-            <IconSymbol 
-              size={focused ? 30 : 28} 
-              name="qrcode" 
-              color={focused ? '#7B1E3A' : color} 
+            <AnimatedIconSymbol
+              size={focused ? 30 : iconSize.value}
+              name="qrcode"
+              color={focused ? '#7B1E3A' : color}
             />
           ),
         }}
@@ -101,10 +107,10 @@ export default function TabLayout() {
         options={{
           title: 'Reservas',
           tabBarIcon: ({ color, focused }) => (
-            <IconSymbol 
-              size={focused ? 30 : 28} 
-              name="calendar" 
-              color={focused ? '#7B1E3A' : color} 
+            <AnimatedIconSymbol
+              size={focused ? 30 : iconSize.value}
+              name="calendar"
+              color={focused ? '#7B1E3A' : color}
             />
           ),
         }}
