@@ -1,27 +1,28 @@
-import { useLocalSearchParams, router } from "expo-router"
-import React from "react"
-import { StyleSheet, useWindowDimensions, View, Text, ActivityIndicator, TouchableOpacity, StatusBar } from "react-native"
 import { Ionicons } from '@expo/vector-icons';
+import { router, useLocalSearchParams } from "expo-router";
+import React from "react";
+import { ActivityIndicator, StatusBar, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 
-import { CarrosselImages, NavigationDots } from "@/components/ui/Carrossel"
-import { GestureHandlerRootView } from "react-native-gesture-handler"
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
-import { ThemedText } from "@/components/ThemedText"
-import { ThemedView } from "@/components/ThemedView"
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { CarrosselImages, NavigationDots } from "@/components/ui/Carrossel";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-import { SheetUp } from "@/components/ui/BottomSheets"
-import { useQRData } from "@/hooks/useApi"
+import { SheetUp } from "@/components/ui/BottomSheets";
+import { useQRData } from "@/hooks/useApi";
 
 export default function Demonstration() {
     const { QRCode } = useLocalSearchParams();
     const { width: windowWidth } = useWindowDimensions();
-    
+
     const { data: response, loading, error } = useQRData(QRCode);
-    
+
     let colection: any = null;
 
     if (response?.status === 'success' && response.data) {
         [colection] = response.data;
+        console.log(colection);
     }
 
     const handleTryAgain = () => {
@@ -36,25 +37,25 @@ export default function Demonstration() {
         router.replace('/qr-scanner');
     };
 
-    const renderHeader = () => (
+    const renderHeader = (titulo?: string) => (
         <View style={styles.headerContainer}>
-            <TouchableOpacity 
-                style={styles.backButton} 
+            <TouchableOpacity
+                style={styles.backButton}
                 onPress={handleBackPress}
                 activeOpacity={0.7}
             >
                 <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
             </TouchableOpacity>
-            
+
             <ThemedText style={styles.headerTitle}>
-                Detalhes do Item
+                {titulo ? titulo : 'Detalhes do Item'}
             </ThemedText>
         </View>
     );
 
     const renderFloatingButton = () => (
-        <TouchableOpacity 
-            style={styles.floatingButton} 
+        <TouchableOpacity
+            style={styles.floatingButton}
             onPress={handleNewScan}
             activeOpacity={0.8}
         >
@@ -72,17 +73,17 @@ export default function Demonstration() {
                         <Ionicons name="close-circle" size={32} color="#d32f2f" />
                     </View>
                 </View>
-                
+
                 <ThemedText type="title" style={styles.invalidTitle}>
                     QR Code Inválido
                 </ThemedText>
-                
+
                 <ThemedText style={styles.invalidMessage}>
                     O QR Code escaneado não é válido ou não foi encontrado em nossa base de dados.
                 </ThemedText>
-                
-                <TouchableOpacity 
-                    style={styles.tryAgainButton} 
+
+                <TouchableOpacity
+                    style={styles.tryAgainButton}
                     onPress={handleTryAgain}
                     activeOpacity={0.8}
                 >
@@ -113,8 +114,8 @@ export default function Demonstration() {
                 <ThemedText style={styles.errorMessage}>
                     {error || 'Não foi possível carregar as informações'}
                 </ThemedText>
-                <TouchableOpacity 
-                    style={styles.retryButton} 
+                <TouchableOpacity
+                    style={styles.retryButton}
                     onPress={handleTryAgain}
                     activeOpacity={0.8}
                 >
@@ -131,26 +132,28 @@ export default function Demonstration() {
             <SafeAreaView style={[styles.container]} edges={['top']}>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     {loading && renderLoading()}
-                    
+
                     {error && renderError()}
-                    
+
                     {response?.status === 'error' && !loading && renderInvalidQRCode()}
-                    
+
                     {colection && !loading && (
                         <>
-                            {renderHeader()}
+                            {renderHeader(colection.nome_item)}
                             <View style={{ position: "relative", backgroundColor: '#FFFFFF', flex: 1 }}>
-                                <CarrosselImages images={colection.images} width={windowWidth} height={500} />
-                                <View style={styles.navigationDotsContainer}>
-                                    <NavigationDots images={colection.images} />
+                                <View style={{ position: "relative" }}>
+                                    <CarrosselImages images={colection.images} width={windowWidth} height={60} heightPercentage={true} />
+                                    <View style={styles.navigationDotsContainer}>
+                                        <NavigationDots images={colection.images} />
+                                    </View>
                                 </View>
-                                
-                                <SheetUp 
-                                    SheetOverDrag={10} 
-                                    SetPosY={55} 
-                                    SheetHeight={1300} 
-                                    Percentage={true} 
-                                    Close={false} 
+
+                                <SheetUp
+                                    SheetOverDrag={10}
+                                    SetPosY={58}
+                                    SheetHeight={1300}
+                                    Percentage={true}
+                                    Close={false}
                                     description={colection.descricao}
                                     floatingButton={renderFloatingButton()}
                                 />
@@ -236,7 +239,7 @@ const styles = StyleSheet.create({
     centerContainer: {
         flex: 1,
         backgroundColor: '#FFFFFF',
-        marginTop: 0, 
+        marginTop: 0,
     },
     // Loading styles
     loadingContent: {
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 20,
         paddingHorizontal: 30,
-        marginTop: -60, 
+        marginTop: -60,
     },
     loadingText: {
         fontSize: 18,
@@ -260,7 +263,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 30,
         gap: 20,
-        marginTop: -60, 
+        marginTop: -60,
     },
     errorTitle: {
         fontSize: 24,
