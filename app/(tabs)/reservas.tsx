@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
@@ -219,9 +220,9 @@ export default function ReservasScreen() {
       setIsLoading(false);
     }
   };
-
+ 
   return (
-    <View style={estilos.containerPrincipal}>
+    <KeyboardAvoidingView behavior={'padding'} style={estilos.containerPrincipal}>
       <View style={estilos.headerSolido}>
         <View style={estilos.cabecalho}>
           <View style={estilos.iconeContainer}>
@@ -438,7 +439,7 @@ export default function ReservasScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
