@@ -90,7 +90,7 @@ export default function QRScannerScreen() {
         </View>
       </SafeAreaView>
 
-      <CameraView 
+      <CameraView
         style={styles.cameraContainer}
         enableTorch={flashOn}
         onBarcodeScanned={({ data }) => {
@@ -99,14 +99,9 @@ export default function QRScannerScreen() {
             setTimeout(() => handleQRCodeScanned(data), 500)
           }
         }}>
-        {!showInstructions && (
-          <View style={styles.scanFrame}>
-            <View style={[styles.corner, styles.topLeft]} />
-            <View style={[styles.corner, styles.topRight]} />
-            <View style={[styles.corner, styles.bottomLeft]} />
-            <View style={[styles.corner, styles.bottomRight]} />
-          </View>
-        )}
+        <View style={styles.scanFrameContainer}>
+          <View style={styles.scanFrame} />
+        </View>
       </CameraView>
 
       {showInstructions && (
@@ -183,56 +178,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  cameraPlaceholder: {
+  scanFrameContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
     alignItems: 'center',
-    opacity: 0.7,
-  },
-  cameraText: {
-    color: '#7B1E3A',
-    fontSize: 18,
-    fontWeight: '600',
-    marginTop: 20,
-  },
-  cameraSubtext: {
-    color: '#4A4A4A',
-    fontSize: 14,
-    marginTop: 8,
-    textAlign: 'center',
+    backgroundColor: '#0000007e'
   },
   scanFrame: {
-    position: 'absolute',
     width: 250,
     height: 250,
-  },
-  corner: {
-    position: 'absolute',
-    width: 30,
-    height: 30,
-    borderColor: '#D4AF37',
-  },
-  topLeft: {
-    top: 0,
-    left: 0,
-    borderTopWidth: 3,
-    borderLeftWidth: 3,
-  },
-  topRight: {
-    top: 0,
-    right: 0,
-    borderTopWidth: 3,
-    borderRightWidth: 3,
-  },
-  bottomLeft: {
-    bottom: 0,
-    left: 0,
-    borderBottomWidth: 3,
-    borderLeftWidth: 3,
-  },
-  bottomRight: {
-    bottom: 0,
-    right: 0,
-    borderBottomWidth: 3,
-    borderRightWidth: 3,
+    backgroundColor: '#ffffff2d',
+    borderRadius: 12,
   },
   instructionsContainer: {
     backgroundColor: 'rgba(123, 30, 58, 0.9)',
@@ -252,6 +210,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     paddingHorizontal: 30,
+    paddingBottom: 20,
     backgroundColor: 'rgba(123, 30, 58, 0.9)',
   },
   button: {
