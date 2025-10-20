@@ -164,9 +164,9 @@ export const styles = StyleSheet.create({
         marginTop: 16,
         marginBottom: 16,
         width: 124,
-        height: 4,
+        height: 8,
         borderRadius: 4,
-        backgroundColor: '#D4AF37',
+        backgroundColor: '#6d5b19ff',
     },
     textDescription: {
         marginBlock: 16,
