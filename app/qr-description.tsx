@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
     },
     navigationDotsContainer: {
-        top: 35,
+        bottom: 35,
         padding: 3,
         width:'25%',
         alignItems: 'center',
