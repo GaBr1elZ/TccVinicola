@@ -77,7 +77,6 @@ export function CarrosselImages({ images, width, height, heightPercentage = fals
 };
 
 export function NavigationDots({ images }: DotsProps) {
-
     const dots = images.map((image, imageIndex) => {
         const flex = scrollX.interpolate({
             inputRange: [
@@ -85,13 +84,21 @@ export function NavigationDots({ images }: DotsProps) {
                 windowWidth * imageIndex,
                 windowWidth * (imageIndex + 1),
             ],
-            outputRange: [1, 2, 1],
+            outputRange: [1, 3, 1],
+            extrapolate: 'clamp',
+        });
+        const opacity = scrollX.interpolate({
+            inputRange: [
+                windowWidth * (imageIndex - 1),
+                windowWidth * imageIndex,
+                windowWidth * (imageIndex + 1),],
+            outputRange: [0.5, 1, 0.5],
             extrapolate: 'clamp',
         });
         return (
             <Animated.View
                 key={imageIndex}
-                style={[styles.normalDot, { flex }]}
+                style={[styles.normalDot, { flex, opacity }]}
             />
         );
     })

@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         position: "absolute",
-        backgroundColor: "rgba(0, 0, 0, 0.38)",
+        backgroundColor: "rgba(0, 0, 0, 0.28)",
         alignSelf: "center",
         borderRadius: 10,
     },
