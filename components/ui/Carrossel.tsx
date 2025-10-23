@@ -9,10 +9,12 @@ import {
     View
 } from "react-native";
 
-var scrollX = useAnimatedValue(0)
 const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+var scrollX = useAnimatedValue(0);
+
 
 export function Carrossel({ images, width, height }: CarrosselProps) {
+    scrollX = useAnimatedValue(0)
 
     return (
         <ScrollView
@@ -43,6 +45,7 @@ export function Carrossel({ images, width, height }: CarrosselProps) {
 }
 
 export function CarrosselImages({ images, width, height, heightPercentage = false }: CarrosselImagesProps) {
+    scrollX = useAnimatedValue(0);
     if (heightPercentage) {
         height = windowHeight * (height / 100);
         console.log('New Height:', height);
