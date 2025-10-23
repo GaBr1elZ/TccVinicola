@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as NavigationBar from 'expo-navigation-bar';
 import React from 'react';
 import {
   FlatList,
@@ -65,6 +66,10 @@ const winesData: Wine[] = [
 ];
 
 export default function CatalogScreen() {
+
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
+
   const renderWineItem = ({ item }: { item: Wine }) => (
     <TouchableOpacity style={styles.cartaoVinho}>
       <ImageBackground

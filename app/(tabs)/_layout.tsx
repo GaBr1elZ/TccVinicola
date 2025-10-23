@@ -5,6 +5,7 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
+import * as NavigationBar from 'expo-navigation-bar';
 
 import Animated from 'react-native-reanimated';
 
@@ -12,6 +13,9 @@ const AnimatedIconSymbol = Animated.createAnimatedComponent(IconSymbol);
 
 export default function TabLayout() {
 
+  NavigationBar.setVisibilityAsync("hidden");
+  NavigationBar.setBehaviorAsync('overlay-swipe')
+  
   return (
     <Tabs
       screenOptions={{
