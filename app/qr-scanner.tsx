@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as NavigationBar from 'expo-navigation-bar';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -13,10 +14,13 @@ export default function QRScannerScreen() {
   const [showInstructions, setShowInstructions] = useState(true);
   const qrCodeLock = useRef(false);
 
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
+
   useFocusEffect(
     React.useCallback(() => {
       qrCodeLock.current = false;
-      setShowInstructions(true); // Opcional: reseta instruções
+      setShowInstructions(false); // Opcional: reseta instruções
       return () => { };
     }, [])
   );
