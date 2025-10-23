@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as NavigationBar from 'expo-navigation-bar';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import apiService from '../services/apiService';
 
 export default function CadastroScreen() {
@@ -13,6 +14,9 @@ export default function CadastroScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
 
   const handleRegister = async () => {
     if (!nome.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -31,18 +35,18 @@ export default function CadastroScreen() {
     }
 
     setIsLoading(true);
-    
+
     try {
       const response = await apiService.register(
-        nome.trim(), 
-        email.trim(), 
-        password, 
+        nome.trim(),
+        email.trim(),
+        password,
         telefone.trim() || undefined
       );
-      
+
       if (response.status === 'success') {
         Alert.alert(
-          'Sucesso!', 
+          'Sucesso!',
           'Cadastro realizado com sucesso! Faça login para continuar.',
           [
             {
@@ -67,148 +71,153 @@ export default function CadastroScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <StatusBar barStyle="light-content" backgroundColor="#7B1E3A" />
+    <KeyboardAvoidingView style={styles.container} behavior='padding'>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <StatusBar barStyle="light-content" backgroundColor="#7B1E3A" />
 
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={handleBackToLogin}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Criar Conta</Text>
-      </View>
-
-      <View style={styles.logoContainer}>
-        <View style={styles.logoCircle}>
-          <Ionicons name="person-add" size={60} color="#ffffff" />
-        </View>
-        <Text style={styles.logoText}>Cadastro</Text>
-        <Text style={styles.logoSubtext}>Crie sua conta e aproveite</Text>
-      </View>
-
-      <View style={styles.formContainer}>
-        <View style={styles.inputContainer}>
-          <Ionicons name="person" size={20} color="#7B1E3A" style={styles.inputIcon} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Nome completo"
-            placeholderTextColor="#4A4A4A"
-            value={nome}
-            onChangeText={setNome}
-            autoCapitalize="words"
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="mail" size={20} color="#7B1E3A" style={styles.inputIcon} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="E-mail"
-            placeholderTextColor="#4A4A4A"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="call" size={20} color="#7B1E3A" style={styles.inputIcon} />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Telefone (opcional)"
-            placeholderTextColor="#4A4A4A"
-            value={telefone}
-            onChangeText={setTelefone}
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed" size={20} color="#7B1E3A" style={styles.inputIcon} />
-          <TextInput
-            style={[styles.textInput, styles.passwordInput]}
-            placeholder="Senha"
-            placeholderTextColor="#4A4A4A"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-            autoCapitalize="none"
-          />
-          <TouchableOpacity 
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.eyeButton}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={handleBackToLogin}
             activeOpacity={0.7}
           >
-            <Ionicons 
-              name={showPassword ? "eye-off" : "eye"} 
-              size={20} 
-              color="#7B1E3A" 
-            />
+            <Ionicons name="arrow-back" size={24} color="#ffffff" />
           </TouchableOpacity>
+          <Text style={styles.headerTitle}>Criar Conta</Text>
         </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed" size={20} color="#7B1E3A" style={styles.inputIcon} />
-          <TextInput
-            style={[styles.textInput, styles.passwordInput]}
-            placeholder="Confirmar senha"
-            placeholderTextColor="#4A4A4A"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry={!showConfirmPassword}
-            autoCapitalize="none"
-          />
-          <TouchableOpacity 
-            onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-            style={styles.eyeButton}
-            activeOpacity={0.7}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoCircle}>
+            <Ionicons name="person-add" size={60} color="#ffffff" />
+          </View>
+          <Text style={styles.logoText}>Cadastro</Text>
+          <Text style={styles.logoSubtext}>Crie sua conta e aproveite</Text>
+        </View>
+
+        <View style={styles.formContainer}>
+          <View style={styles.inputContainer}>
+            <Ionicons name="person" size={20} color="#7B1E3A" style={styles.inputIcon} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Nome completo"
+              placeholderTextColor="#4A4A4A"
+              value={nome}
+              onChangeText={setNome}
+              autoCapitalize="words"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail" size={20} color="#7B1E3A" style={styles.inputIcon} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="E-mail"
+              placeholderTextColor="#4A4A4A"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="call" size={20} color="#7B1E3A" style={styles.inputIcon} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Telefone (opcional)"
+              placeholderTextColor="#4A4A4A"
+              value={telefone}
+              onChangeText={setTelefone}
+              keyboardType="phone-pad"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed" size={20} color="#7B1E3A" style={styles.inputIcon} />
+            <TextInput
+              style={[styles.textInput, styles.passwordInput]}
+              placeholder="Senha"
+              placeholderTextColor="#4A4A4A"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              autoCapitalize="none"
+            />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeButton}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={20}
+                color="#7B1E3A"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed" size={20} color="#7B1E3A" style={styles.inputIcon} />
+            <TextInput
+              style={[styles.textInput, styles.passwordInput]}
+              placeholder="Confirmar senha"
+              placeholderTextColor="#4A4A4A"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showConfirmPassword}
+              autoCapitalize="none"
+            />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={styles.eyeButton}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={showConfirmPassword ? "eye-off" : "eye"}
+                size={20}
+                color="#7B1E3A"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.passwordHint}>A senha deve ter no mínimo 6 caracteres</Text>
+
+          <TouchableOpacity
+            style={[styles.registerButton, isLoading && styles.registerButtonDisabled]}
+            onPress={handleRegister}
+            disabled={isLoading}
+            activeOpacity={0.8}
           >
-            <Ionicons 
-              name={showConfirmPassword ? "eye-off" : "eye"} 
-              size={20} 
-              color="#7B1E3A" 
-            />
+            {isLoading ? (
+              <Text style={styles.registerButtonText}>Cadastrando...</Text>
+            ) : (
+              <Text style={styles.registerButtonText}>Cadastrar</Text>
+            )}
           </TouchableOpacity>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Já tem uma conta?</Text>
+            <TouchableOpacity onPress={handleBackToLogin} activeOpacity={0.7}>
+              <Text style={styles.signInText}>Faça Login</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <Text style={styles.passwordHint}>A senha deve ter no mínimo 6 caracteres</Text>
-
-        <TouchableOpacity 
-          style={[styles.registerButton, isLoading && styles.registerButtonDisabled]} 
-          onPress={handleRegister}
-          disabled={isLoading}
-          activeOpacity={0.8}
-        >
-          {isLoading ? (
-            <Text style={styles.registerButtonText}>Cadastrando...</Text>
-          ) : (
-            <Text style={styles.registerButtonText}>Cadastrar</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Já tem uma conta?</Text>
-        <TouchableOpacity onPress={handleBackToLogin} activeOpacity={0.7}>
-          <Text style={styles.signInText}>Faça Login</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#7B1E3A',
+    paddingBottom: 0,
+    backgroundColor: '#ffffffff',
   },
   contentContainer: {
     flexGrow: 1,
+    backgroundColor: '#7B1E3A',
+    paddingBottom: 0,
   },
   header: {
     flexDirection: 'row',
