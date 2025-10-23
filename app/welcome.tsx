@@ -1,9 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as NavigationBar from 'expo-navigation-bar';
 import { router } from 'expo-router';
 import React from 'react';
 import { ImageBackground, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function WelcomeScreen() {
+
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
+
   const handleContinueWithoutLogin = () => {
     router.push('/(tabs)');
   };
