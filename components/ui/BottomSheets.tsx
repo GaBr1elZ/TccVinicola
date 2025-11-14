@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Gesture, GestureDetector, ScrollView } from "react-native-gesture-handler";
 import Animated, { runOnJS, SlideInDown, SlideOutDown, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
 type SheetProps = {
@@ -83,7 +83,6 @@ export function SheetDown(
 export function SheetUp(
     {
         SetPosY = 300,
-        SheetHeight = 100,
         Percentage = false,
         SheetOverDrag = 10,
         onClose = () => { },
@@ -95,6 +94,10 @@ export function SheetUp(
 ) {
     if (Percentage === true) {
         SetPosY = DIMENSIONS.height * (SetPosY / 100);
+        var SheetHeight = DIMENSIONS.height - 150;
+        // console.log(SetPosY, SheetHeight, DIMENSIONS.height);
+    } else {
+        var SheetHeight = DIMENSIONS.height - SetPosY;
     }
 
     const offset = useSharedValue(0);
@@ -136,8 +139,10 @@ export function SheetUp(
                     style={[styles.container, { height: SheetHeight }, translateY]}
                     entering={SlideInDown.springify(100).damping(5)}
                     exiting={SlideOutDown}>
-                    <View style={styles.dragIcon}/>
-                    <Text style={styles.textDescription}>{description}</Text>
+                    <View style={styles.dragIcon} />
+                    <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
+                        <Text style={styles.textDescription}>{description}</Text>
+                    </ScrollView>
                 </Animated.View>
             </GestureDetector>
         </>
@@ -157,7 +162,7 @@ export const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 10, height: 3 },
         shadowOpacity: 0.5,
-        // alignItems: 'center',
+        elevation: 5,
     },
     dragIcon: {
         alignSelf: 'center',
