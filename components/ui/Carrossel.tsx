@@ -48,7 +48,6 @@ export function CarrosselImages({ images, width, height, heightPercentage = fals
     scrollX = useAnimatedValue(0);
     if (heightPercentage) {
         height = windowHeight * (height / 100);
-        console.log('New Height:', height);
     }
     return (
         <ScrollView
