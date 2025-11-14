@@ -175,9 +175,6 @@ export default function ReservasScreen() {
         dataFormatada = `${ano}-${mes}-${dia}`;
       }
 
-      console.log('Data original:', dadosReserva.dataVisita);
-      console.log('Data formatada:', dataFormatada);
-
       const reservaData = {
         usuario_id: userId,
         nome_cliente: dadosReserva.nomeCliente.trim(),
