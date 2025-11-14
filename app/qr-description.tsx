@@ -17,7 +17,7 @@ export default function Demonstration() {
     const { QRCode } = useLocalSearchParams();
     const { width: windowWidth } = useWindowDimensions();
 
-    const { data: response, loading, error } = useQRData(QRCode);
+    const { data: response, loading, error, invalid } = useQRData(QRCode);
 
     NavigationBar.setVisibilityAsync('hidden')
     NavigationBar.setBehaviorAsync('overlay-swipe')
@@ -138,7 +138,7 @@ export default function Demonstration() {
 
                     {error && renderError()}
 
-                    {response?.status === 'error' && !loading && renderInvalidQRCode()}
+                    {(response?.status === 'error' && !loading) || invalid && renderInvalidQRCode()}
 
                     {colection && !loading && (
                         <>
@@ -154,7 +154,6 @@ export default function Demonstration() {
                                 <SheetUp
                                     SheetOverDrag={10}
                                     SetPosY={58}
-                                    SheetHeight={1300}
                                     Percentage={true}
                                     Close={false}
                                     description={colection.descricao}
