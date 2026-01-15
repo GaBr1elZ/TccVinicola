@@ -34,11 +34,11 @@ class ApiService {
       
       const data = await response.json();
       console.log('✓ Conexão bem-sucedida com Railway');
-      console.log('Resposta da API:', data);
+      // console.log('Resposta da API:', data);
       
       return data;
     } catch (error) {
-      console.error(`✗ Erro ao conectar no Railway:`, error);
+      // console.error(`✗ Erro ao conectar no Railway:`, error);
       throw error instanceof Error ? error : new Error('Falha na conexão com o servidor');
     }
   }

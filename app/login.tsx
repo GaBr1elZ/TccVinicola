@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+// import AsyncStorage from '@react-native-async-storage/async-storage'; // INSTALE: npx expo install @react-native-async-storage/async-storage
+import * as NavigationBar from 'expo-navigation-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import apiService from '../services/apiService';
 
@@ -10,6 +12,9 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -127,9 +132,7 @@ export default function LoginScreen() {
             <Text style={styles.loginButtonText}>Entrar</Text>
           )}
         </TouchableOpacity>
-      </View>
-
-      <SafeAreaView style={styles.footer}>
+        <SafeAreaView style={styles.footer}>
           <Text style={styles.footerText}>Não tem uma conta?</Text>
           <TouchableOpacity
             onPress={() => router.push('/cadastro')}
@@ -137,7 +140,8 @@ export default function LoginScreen() {
           >
             <Text style={styles.signUpText}>Cadastre-se</Text>
           </TouchableOpacity>
-      </SafeAreaView>
+        </SafeAreaView>
+      </View>
     </ScrollView>
   );
 }

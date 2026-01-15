@@ -11,12 +11,16 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import { SheetUp } from "@/components/ui/BottomSheets";
 import { useQRData } from "@/hooks/useApi";
+import * as NavigationBar from 'expo-navigation-bar';
 
 export default function Demonstration() {
     const { QRCode } = useLocalSearchParams();
     const { width: windowWidth } = useWindowDimensions();
 
-    const { data: response, loading, error } = useQRData(QRCode);
+    const { data: response, loading, error, invalid } = useQRData(QRCode);
+
+    NavigationBar.setVisibilityAsync('hidden')
+    NavigationBar.setBehaviorAsync('overlay-swipe')
 
     let colection: any = null;
 
@@ -25,7 +29,7 @@ export default function Demonstration() {
     }
 
     const handleTryAgain = () => {
-        router.replace('/qr-scanner');
+        router.dismissTo('/qr-scanner');
     };
 
     const handleBackPress = () => {
@@ -33,7 +37,7 @@ export default function Demonstration() {
     };
 
     const handleNewScan = () => {
-        router.replace('/qr-scanner');
+        router.dismissTo('/qr-scanner');
     };
 
     const renderHeader = (titulo?: string) => (
@@ -134,7 +138,7 @@ export default function Demonstration() {
 
                     {error && renderError()}
 
-                    {response?.status === 'error' && !loading && renderInvalidQRCode()}
+                    {(response?.status === 'error' && !loading) || invalid && renderInvalidQRCode()}
 
                     {colection && !loading && (
                         <>
@@ -150,7 +154,6 @@ export default function Demonstration() {
                                 <SheetUp
                                     SheetOverDrag={10}
                                     SetPosY={58}
-                                    SheetHeight={1300}
                                     Percentage={true}
                                     Close={false}
                                     description={colection.descricao}
@@ -226,11 +229,12 @@ const styles = StyleSheet.create({
     navigationDotsContainer: {
         bottom: 35,
         padding: 3,
+        width:'25%',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'center',
         position: "absolute",
-        backgroundColor: "#0000005f",
+        backgroundColor: "rgba(0, 0, 0, 0.28)",
         alignSelf: "center",
         borderRadius: 10,
     },

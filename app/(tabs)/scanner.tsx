@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as NavigationBar from 'expo-navigation-bar';
 import { router } from 'expo-router';
 import React from 'react';
 import {
@@ -10,6 +11,10 @@ import {
 } from 'react-native';
 
 export default function ScannerScreen() {
+
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
+
   const handleScanQR = () => {
     router.push('/qr-scanner');
   };

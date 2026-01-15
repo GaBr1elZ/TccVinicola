@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as NavigationBar from 'expo-navigation-bar';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -47,6 +48,9 @@ export default function ReservasScreen() {
   });
   const [userId, setUserId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  NavigationBar.setVisibilityAsync('hidden')
+  NavigationBar.setBehaviorAsync('overlay-swipe')
 
   useEffect(() => {
     loadUserData();
@@ -170,9 +174,6 @@ export default function ReservasScreen() {
         const ano = dadosReserva.dataVisita.substring(4, 8);
         dataFormatada = `${ano}-${mes}-${dia}`;
       }
-
-      console.log('Data original:', dadosReserva.dataVisita);
-      console.log('Data formatada:', dataFormatada);
 
       const reservaData = {
         usuario_id: userId,
