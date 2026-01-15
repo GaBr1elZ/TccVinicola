@@ -28,10 +28,6 @@ export default function LoginScreen() {
       const response = await apiService.login(email.trim(), password);
 
       if (response.status === 'success' && response.data) {
-        // Salva os dados do usuário no AsyncStorage
-        // IMPORTANTE: Instale antes: npx expo install @react-native-async-storage/async-storage
-        // await AsyncStorage.setItem('user', JSON.stringify(response.data));
-        // await AsyncStorage.setItem('userId', response.data.id.toString());
 
         console.log('Login bem-sucedido:', response.data);
         Alert.alert('Sucesso!', 'Login realizado com sucesso!');
