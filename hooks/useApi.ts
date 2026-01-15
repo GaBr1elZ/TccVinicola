@@ -1,3 +1,4 @@
+import { isValidQRCode } from '@/validators/qrValidator';
 import { useEffect, useState } from 'react';
 import apiService from '../services/apiService';
 
@@ -5,17 +6,21 @@ interface ApiState<T> {
   data: T | null;
   loading: boolean;
   error: string | null;
+  invalid?: boolean;
 }
 
-export function useQRData(qrCode: string | string[]) {
+export function useQRData(qrCode: string | string[] | undefined) {
   const [state, setState] = useState<ApiState<any>>({
     data: null,
     loading: true,
     error: null,
+    invalid: false,
   });
 
   useEffect(() => {
-    if (!qrCode) {
+    const qrCodeString = Array.isArray(qrCode) ? qrCode[0] : qrCode;
+
+    if (!qrCodeString) {
       setState({
         data: null,
         loading: false,
@@ -24,17 +29,24 @@ export function useQRData(qrCode: string | string[]) {
       return;
     }
 
+    if (!isValidQRCode(qrCodeString)) {
+      return setState({
+        data: null,
+        loading: false,
+        error: null,
+        invalid: true,
+      });
+    }
+
     const fetchData = async () => {
       try {
         setState(prev => ({ ...prev, loading: true, error: null }));
         
-        const qrCodeString = Array.isArray(qrCode) ? qrCode[0] : qrCode;
-        
-        console.log('🔍 Iniciando busca para QR Code:', qrCodeString);
+        // console.log('🔍 Iniciando busca para QR Code:', qrCodeString);
         
         const response = await apiService.getQRInfo(qrCodeString);
         
-        console.log('✅ Dados recebidos com sucesso:', response);
+        // console.log('✅ Dados recebidos com sucesso:', response);
         
         setState({
           data: response,

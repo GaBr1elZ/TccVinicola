@@ -5,14 +5,17 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
+import * as NavigationBar from 'expo-navigation-bar';
 
-import Animated, { useSharedValue } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 const AnimatedIconSymbol = Animated.createAnimatedComponent(IconSymbol);
 
 export default function TabLayout() {
-  var iconSize = useSharedValue(28)
 
+  NavigationBar.setVisibilityAsync("hidden");
+  NavigationBar.setBehaviorAsync('overlay-swipe')
+  
   return (
     <Tabs
       screenOptions={{
@@ -69,7 +72,7 @@ export default function TabLayout() {
           title: 'Início',
           tabBarIcon: ({ color, focused }) => (
             <AnimatedIconSymbol
-              size={focused ? 30 : iconSize.value}
+              size={focused ? 30 : 28}
               name="house.fill"
               color={focused ? '#7B1E3A' : color}
             />
@@ -82,7 +85,7 @@ export default function TabLayout() {
           title: 'Catálogo',
           tabBarIcon: ({ color, focused }) => (
             <AnimatedIconSymbol
-              size={focused ? 30 : iconSize.value}
+              size={focused ? 30 : 28}
               name="wineglass"
               color={focused ? '#7B1E3A' : color}
             />
@@ -95,7 +98,7 @@ export default function TabLayout() {
           title: 'QR Code',
           tabBarIcon: ({ color, focused }) => (
             <AnimatedIconSymbol
-              size={focused ? 30 : iconSize.value}
+              size={focused ? 30 : 28}
               name="qrcode"
               color={focused ? '#7B1E3A' : color}
             />
@@ -108,7 +111,7 @@ export default function TabLayout() {
           title: 'Reservas',
           tabBarIcon: ({ color, focused }) => (
             <AnimatedIconSymbol
-              size={focused ? 30 : iconSize.value}
+              size={focused ? 30 : 28}
               name="calendar"
               color={focused ? '#7B1E3A' : color}
             />

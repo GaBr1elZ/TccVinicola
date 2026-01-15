@@ -9,10 +9,12 @@ import {
     View
 } from "react-native";
 
-var scrollX = useAnimatedValue(0)
-const { width: windowWidth, height: windowHeight} = useWindowDimensions();
+const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+var scrollX = useAnimatedValue(0);
+
 
 export function Carrossel({ images, width, height }: CarrosselProps) {
+    scrollX = useAnimatedValue(0)
 
     return (
         <ScrollView
@@ -43,9 +45,9 @@ export function Carrossel({ images, width, height }: CarrosselProps) {
 }
 
 export function CarrosselImages({ images, width, height, heightPercentage = false }: CarrosselImagesProps) {
-    if (heightPercentage){
+    scrollX = useAnimatedValue(0);
+    if (heightPercentage) {
         height = windowHeight * (height / 100);
-        console.log('New Height:',height);
     }
     return (
         <ScrollView
@@ -77,21 +79,28 @@ export function CarrosselImages({ images, width, height, heightPercentage = fals
 };
 
 export function NavigationDots({ images }: DotsProps) {
-
     const dots = images.map((image, imageIndex) => {
-        const width = scrollX.interpolate({
+        const flex = scrollX.interpolate({
             inputRange: [
                 windowWidth * (imageIndex - 1),
                 windowWidth * imageIndex,
                 windowWidth * (imageIndex + 1),
             ],
-            outputRange: [8, 24, 8],
+            outputRange: [1, 3, 1],
+            extrapolate: 'clamp',
+        });
+        const opacity = scrollX.interpolate({
+            inputRange: [
+                windowWidth * (imageIndex - 1),
+                windowWidth * imageIndex,
+                windowWidth * (imageIndex + 1),],
+            outputRange: [0.5, 1, 0.5],
             extrapolate: 'clamp',
         });
         return (
             <Animated.View
                 key={imageIndex}
-                style={[styles.normalDot, { width }]}
+                style={[styles.normalDot, { flex, opacity }]}
             />
         );
     })
@@ -111,10 +120,10 @@ export const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     normalDot: {
-        height: 8,
-        width: 8,
+        flex: 1,
+        height: 3,
         borderRadius: 4,
-        backgroundColor: '#e4e4e4ff',
+        backgroundColor: '#f5f5f5ff',
         marginHorizontal: 4,
     },
     indicatorContainer: {

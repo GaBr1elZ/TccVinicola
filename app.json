@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Vinícola App",
-    "slug": "vinicolaapp",
+    "slug": "tcc-vinicola",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/iconApp.jpg",
@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gabrielmachadocalegari.TestesTccVinicolaMobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -43,12 +47,13 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8b3428a0-9e45-4557-9d6f-6e44a41e867a"
+        "projectId": "ee82f1ae-7e38-4c4b-950b-dab6dd96e576"
       },
       "apiUrl": "https://backend-tcc-production-9d24.up.railway.app"
     },
     "androidNavigationBar": {
       "visible": "immersive"
-    }
+    },
+    "owner": "tcc-vinicola"
   }
 }
