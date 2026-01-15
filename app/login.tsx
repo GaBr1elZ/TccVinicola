@@ -2,7 +2,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage'; // INSTALE: npx expo install @react-native-async-storage/async-storage
 import { SafeAreaView } from 'react-native-safe-area-context';
 import apiService from '../services/apiService';
 
@@ -24,10 +23,6 @@ export default function LoginScreen() {
       const response = await apiService.login(email.trim(), password);
 
       if (response.status === 'success' && response.data) {
-        // Salva os dados do usuário no AsyncStorage
-        // IMPORTANTE: Instale antes: npx expo install @react-native-async-storage/async-storage
-        // await AsyncStorage.setItem('user', JSON.stringify(response.data));
-        // await AsyncStorage.setItem('userId', response.data.id.toString());
 
         console.log('Login bem-sucedido:', response.data);
         Alert.alert('Sucesso!', 'Login realizado com sucesso!');
