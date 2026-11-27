@@ -1,0 +1,38 @@
+# Sobe a API e o MySQL já com as tabelas e dados de exemplo:
+#   docker compose up -d
+# API em http://localhost:3333
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD:-vinicola}
+      MYSQL_DATABASE: vinicola_tcc
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_PASSWORD:-vinicola}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    environment:
+      PORT: 3333
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-vinicola}
+      MYSQL_DATABASE: vinicola_tcc
+      VAGAS_POR_HORARIO: ${VAGAS_POR_HORARIO:-20}
+    ports:
+      - "3333:3333"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

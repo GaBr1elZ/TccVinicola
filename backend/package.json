@@ -1,0 +1,22 @@
+{
+  "name": "teste-app-qr-code",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/cors": "^11.4.3",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^17.2.1",
+    "fastify": "^5.5.0",
+    "mysql2": "^3.14.3"
+  }
+}

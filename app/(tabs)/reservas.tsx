@@ -13,6 +13,7 @@ import {
   View
 } from 'react-native';
 import apiService from '../../services/apiService';
+import { getUsuarioAtual } from '../../services/session';
 
 interface DadosReserva {
   nomeCliente: string;
@@ -58,7 +59,7 @@ export default function ReservasScreen() {
 
   const loadUserData = async () => {
     try {
-      setUserId(1);
+      setUserId(getUsuarioAtual()?.id ?? null);
     } catch (error) {
       console.error('Erro ao carregar dados do usuário:', error);
     }

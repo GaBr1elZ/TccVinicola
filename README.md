@@ -150,6 +150,7 @@ TccVinicola/
 ### Pré-requisitos
 
 - **Node.js** 18+ e npm
+- **Docker** (para subir a API e o banco com um comando)
 - **Expo CLI** (opcional, mas recomendado)
 - **Expo Go** app instalado no celular:
   - [iOS App Store](https://apps.apple.com/app/expo-go/id982107779)
@@ -157,23 +158,27 @@ TccVinicola/
 
 ### Passo a Passo
 
+A API fica dentro deste repositório, na pasta [`backend/`](backend/) (Node.js, Fastify e MySQL). Com o Docker instalado, ela sobe junto com o banco já criado e com dados de exemplo.
+
 ```bash
 # Clone o repositório
-git clone <seu-repositorio>
-
-# Entre na pasta do frontend
+git clone https://github.com/GaBr1elZ/TccVinicola.git
 cd TccVinicola
 
-# Instale as dependências
+# 1. Suba a API e o MySQL (porta 3333)
+npm run api
+
+# 2. Instale as dependências do app
 npm install
 
-# Configure a URL da API
-# Edite o arquivo .env com a URL do backend
-echo "API_URL=http://SEU-IP:3333" > .env
+# 3. Aponte o app para a API, usando o IP do seu computador na rede
+cp .env.example .env   # e troque o IP dentro do arquivo
 
-# Inicie o Expo Dev Server
+# 4. Inicie o Expo
 npm start
 ```
+
+Sem Docker, dá para rodar a API direto com Node e um MySQL próprio: veja o [README da API](backend/README.md).
 
 ### 📱 Executando no Celular
 
@@ -201,12 +206,12 @@ npm run ios
 ### Variáveis de Ambiente (.env)
 
 ```env
-# URL da API Backend
+# URL da API Backend (o prefixo EXPO_PUBLIC_ é obrigatório para o Expo ler a variável)
 # Para desenvolvimento local, use o IP da sua máquina
-API_URL=http://192.168.1.10:3333
+EXPO_PUBLIC_API_URL=http://192.168.1.10:3333
 
 # Para produção (Railway)
-# API_URL=https://backendtcc-production.up.railway.app
+# EXPO_PUBLIC_API_URL=https://backend-tcc-production-9d24.up.railway.app
 ```
 
 **⚠️ IMPORTANTE**: 
