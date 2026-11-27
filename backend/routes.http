@@ -1,0 +1,49 @@
+@api = http://127.0.0.1:3333
+
+### Health check
+GET {{api}}/
+
+### Item pelo QR code
+GET {{api}}/qr-info/QR001
+
+### Cadastro
+POST {{api}}/auth/register
+Content-Type: application/json
+
+{ "nome": "Maria", "email": "maria@exemplo.com", "senha": "123456", "telefone": "19999990000" }
+
+### Login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "maria@exemplo.com", "senha": "123456" }
+
+### Dados do usuário
+GET {{api}}/auth/user/1
+
+### Criar reserva
+POST {{api}}/reservations
+Content-Type: application/json
+
+{
+  "usuario_id": 1,
+  "nome_cliente": "Maria",
+  "email_cliente": "maria@exemplo.com",
+  "telefone_cliente": "19999990000",
+  "data_visita": "2030-01-15",
+  "horario_visita": "10:00",
+  "numero_visitantes": 2,
+  "tipo_tour": "premium"
+}
+
+### Vagas em um horário
+GET {{api}}/reservations/check-availability/2030-01-15/10:00
+
+### Reservas do usuário
+GET {{api}}/reservations/user/1
+
+### Confirmar reserva
+PATCH {{api}}/reservations/1/status
+Content-Type: application/json
+
+{ "status": "confirmada" }
