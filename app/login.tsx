@@ -6,6 +6,7 @@ import { Alert, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpa
 import * as NavigationBar from 'expo-navigation-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import apiService from '../services/apiService';
+import { setUsuarioAtual } from '../services/session';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -29,7 +30,7 @@ export default function LoginScreen() {
 
       if (response.status === 'success' && response.data) {
 
-        console.log('Login bem-sucedido:', response.data);
+        setUsuarioAtual(response.data);
         Alert.alert('Sucesso!', 'Login realizado com sucesso!');
         router.replace('/(tabs)');
       } else {

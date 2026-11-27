@@ -167,9 +167,9 @@ cd TccVinicola
 # Instale as dependências
 npm install
 
-# Configure a URL da API
-# Edite o arquivo .env com a URL do backend
-echo "API_URL=http://SEU-IP:3333" > .env
+# Suba a API (repositório yRizer/TestesTccVinicola) com: docker compose up -d
+# Depois configure a URL da API com o IP do seu computador na rede
+echo "EXPO_PUBLIC_API_URL=http://SEU-IP:3333" > .env
 
 # Inicie o Expo Dev Server
 npm start
@@ -201,12 +201,12 @@ npm run ios
 ### Variáveis de Ambiente (.env)
 
 ```env
-# URL da API Backend
+# URL da API Backend (o prefixo EXPO_PUBLIC_ é obrigatório para o Expo ler a variável)
 # Para desenvolvimento local, use o IP da sua máquina
-API_URL=http://192.168.1.10:3333
+EXPO_PUBLIC_API_URL=http://192.168.1.10:3333
 
 # Para produção (Railway)
-# API_URL=https://backendtcc-production.up.railway.app
+# EXPO_PUBLIC_API_URL=https://backend-tcc-production-9d24.up.railway.app
 ```
 
 **⚠️ IMPORTANTE**: 
